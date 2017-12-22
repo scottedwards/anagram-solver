@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <fstream>
+
+#include <iostream>
 
 #include "FileNotFoundException.h"
 
@@ -21,8 +24,54 @@ AnagramDatabase::AnagramDatabase(const std::string& dict)
 void AnagramDatabase::setDictionary(const std::string& dict) 
     throw (std::exception)
 {
-    if (FILE *file = fopen(dict.c_str(), "r")) {
-        fclose(file);
+    //open the file and make sure it's open
+    std::ifstream infile(dict);
+    if (infile.is_open()) {
+        std::string word;
+        //read the file line by line
+        while (infile >> word)
+        {
+
+            //get the sum of all the ASCII values of the word
+            int sum = 0;
+            for (int i = 0; i < word.length(); i++)
+                sum += (int) word.at(i);
+
+            //find the map that holds all the words of the same length.
+            anagram_db::const_iterator lenMapIt = adb.find(word.length());
+            if (lenMapIt != adb.end()) 
+            {
+                //there has been words added before of the same length
+                //now, find that vector that contains all the words that have the
+                //same sum of ASCII character values.
+                char_sum_map::const_iterator sumMapIt = lenMapIt->second.find(sum);
+                if (sumMapIt != lenMapIt->second.end())
+                {
+                    //just add the word to the located vector
+                    std::vector < std::string > anagramList = sumMapIt->second;
+                    anagramList.push_back(word);
+                }
+                else
+                {
+                    std::vector < std::string > anagramList;
+                    anagramList.push_back(word);
+                    char_sum_map sumMap = lenMapIt->second;
+                    sumMap[sum] = anagramList;
+                }
+            }
+            else
+            {
+                //there has been no word with this length before
+                char_sum_map newSumMap;
+                std::vector < std::string > anagramList;
+                anagramList.push_back(word);
+
+                //add the vector to the map, and add that map the database
+                newSumMap[sum] = anagramList;
+                adb[word.length()] = newSumMap; 
+            }
+        }
+        infile.close(); 
     } else {
         throw FileNotFoundException(dict);
     }   
