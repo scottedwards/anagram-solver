@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 //the type that the anagram database will have
-typedef std::unordered_map < int, std::unordered_map < int, vector < std::string > > > anagram_db;
+typedef std::unordered_map < int, std::unordered_map < int, std::vector < std::string > > > anagram_db;
 
 /** 
  * My Anagram Database Class.
