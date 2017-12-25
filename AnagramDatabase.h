@@ -41,11 +41,16 @@ class AnagramDatabase
          * Uses the given word file for a dictionary.
          */
         void setDictionary(const std::string& dict) throw (std::exception); 
+        /**
+         * Returns if a word is an anagram of another word.
+         * Does this by comparing the amount of times a character pops up in
+         * each word (they must be equal for all characters)
+         */
+        bool isAnagram(const std::string& a1, const std::string& a2);
 
     private:
-         anagram_db adb;
-         int getWordSum(const std::string& word);
-         bool isAnagram(const std::string& a1, const std::string& a2);
+        anagram_db adb;
+        int getWordSum(const std::string& word);
 };
 
 #endif
