@@ -33,30 +33,26 @@ void AnagramDatabase::setDictionary(const std::string& dict)
         {
 
             //get the sum of all the ASCII values of the word
-            int sum = 0;
-            for (int i = 0; i < word.length(); i++)
-                sum += (int) word.at(i);
+            int sum = getWordSum(word);
 
             //find the map that holds all the words of the same length.
-            anagram_db::const_iterator lenMapIt = adb.find(word.length());
+            anagram_db::iterator lenMapIt = adb.find(word.length());
             if (lenMapIt != adb.end()) 
             {
                 //there has been words added before of the same length
                 //now, find that vector that contains all the words that have the
                 //same sum of ASCII character values.
-                char_sum_map::const_iterator sumMapIt = lenMapIt->second.find(sum);
+                char_sum_map::iterator sumMapIt = lenMapIt->second.find(sum);
                 if (sumMapIt != lenMapIt->second.end())
                 {
                     //just add the word to the located vector
-                    std::vector < std::string > anagramList = sumMapIt->second;
-                    anagramList.push_back(word);
+                    (sumMapIt->second).push_back(word);
                 }
                 else
                 {
                     std::vector < std::string > anagramList;
                     anagramList.push_back(word);
-                    char_sum_map sumMap = lenMapIt->second;
-                    sumMap[sum] = anagramList;
+                    lenMapIt->second[sum] = anagramList;
                 }
             }
             else
@@ -80,6 +76,21 @@ void AnagramDatabase::setDictionary(const std::string& dict)
 std::vector<std::string> AnagramDatabase::findAnagrams(const std::string& anagram)
 {
     std::vector<std::string> anagrams;
-    anagrams.push_back("not implemented yet");
+    anagram_db::const_iterator lenMapIt = adb.find(anagram.length());
+    if (lenMapIt != adb.end())
+    {
+        int sum = getWordSum(anagram);
+        char_sum_map::const_iterator sumMapIt = lenMapIt->second.find(sum);
+        if (sumMapIt != lenMapIt->second.end())
+            anagrams = adb[anagram.length()][sum];
+    }
     return anagrams;
+}
+
+int AnagramDatabase::getWordSum(const std::string& word)
+{
+    int sum = 0;
+    for (int i = 0; i < word.length(); i++)
+        sum += (int) word.at(i);
+    return sum;
 }
