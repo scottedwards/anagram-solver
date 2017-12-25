@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
     //set up the anagram database
     try
     {
-        ad.setDictionary("fakewords.txt");
+        ad.setDictionary("words.txt");
     }
     catch (std::exception& e)
     {
