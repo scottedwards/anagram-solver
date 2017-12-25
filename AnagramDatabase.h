@@ -44,6 +44,8 @@ class AnagramDatabase
 
     private:
          anagram_db adb;
+         int getWordSum(const std::string& word);
+         bool isAnagram(const std::string& a1, const std::string& a2);
 };
 
 #endif
