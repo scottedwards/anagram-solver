@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <set>
 
 #include "AnagramDatabase.h"
 #include "FileNotFoundException.h"
@@ -54,9 +55,18 @@ int main(int argc, char * argv[])
                     break;
                 default:
                     std::cout << "Finding Anagrams..." << std::endl;
-                    std::vector<std::string> anagrams = ad.findAnagrams(input);
-                    for (int i = 0; i < anagrams.size(); i++)
-                        std::cout << " - " << anagrams[i] << std::endl;
+                    typedef std::set<std::string> str_set;
+                    str_set anagrams = ad.findAnagrams(input);
+                    if (anagrams.empty())
+                        std::cout << RED << "This is not a word!"
+                            << NT << std::endl;
+                    else
+                        for (
+                                str_set::const_iterator a = anagrams.cbegin();
+                                a != anagrams.cend(); 
+                                ++a
+                            )
+                            std::cout << " - " << *a << std::endl;
             }
         }
         catch (std::exception& e)
