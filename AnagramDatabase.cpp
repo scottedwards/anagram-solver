@@ -46,12 +46,12 @@ void AnagramDatabase::setDictionary(const std::string& dict)
                 if (sumMapIt != lenMapIt->second.end())
                 {
                     //just add the word to the located vector
-                    (sumMapIt->second).push_back(word);
+                    (sumMapIt->second).insert(word);
                 }
                 else
                 {
-                    std::vector < std::string > anagramList;
-                    anagramList.push_back(word);
+                    std::set < std::string > anagramList;
+                    anagramList.insert(word);
                     lenMapIt->second[sum] = anagramList;
                 }
             }
@@ -59,8 +59,8 @@ void AnagramDatabase::setDictionary(const std::string& dict)
             {
                 //there has been no word with this length before
                 char_sum_map newSumMap;
-                std::vector < std::string > anagramList;
-                anagramList.push_back(word);
+                std::set < std::string > anagramList;
+                anagramList.insert(word);
 
                 //add the vector to the map, and add that map the database
                 newSumMap[sum] = anagramList;
@@ -73,9 +73,9 @@ void AnagramDatabase::setDictionary(const std::string& dict)
     }   
 }
 
-std::vector<std::string> AnagramDatabase::findAnagrams(const std::string& anagram)
+std::set<std::string> AnagramDatabase::findAnagrams(const std::string& anagram)
 {
-    std::vector<std::string> anagrams;
+    std::set<std::string> anagrams;
     anagram_db::const_iterator lenMapIt = adb.find(anagram.length());
     if (lenMapIt != adb.end())
     {
@@ -84,7 +84,57 @@ std::vector<std::string> AnagramDatabase::findAnagrams(const std::string& anagra
         if (sumMapIt != lenMapIt->second.end())
             anagrams = adb[anagram.length()][sum];
     }
+    filter(anagrams, anagram, &isAnagram);
     return anagrams;
+}
+
+void AnagramDatabase::filter(std::set <std::string>& st, 
+        const std::string& proposition,
+        bool (*predicate)(const std::string& s1, const std::string& s2))
+{
+    typedef std::set < std::string > str_set;
+    for (str_set::iterator elem = st.begin(); elem != st.end();)
+    {
+        if (!predicate(proposition, *elem)) 
+            //erase returns an iterator that is incremented from the one
+            //that was deleted (so deleting does not mess up pasing through the set).
+            elem = st.erase(elem);
+        else
+            elem = ++elem;
+    }
+}
+
+bool AnagramDatabase::isAnagram(const std::string& a1, const std::string& a2)
+{
+    typedef std::unordered_map<char, int> charMap;
+    if (a1.length() != a2.length()) return false;
+    //a map that will store the number of times a character has appeared
+    //in a1 minus the number of times the same character has apeared in a2
+    charMap charCount;
+    charMap::iterator it1;
+    charMap::iterator it2;
+
+    for (int i = 0; i < a1.length(); ++i)
+    {
+        //increment the value for the character at position i for a1
+        it1 = charCount.find(a1.at(i));
+        if (it1 != charCount.end())
+            charCount[a1.at(i)] += 1; 
+        else
+            charCount[a1.at(i)] = 1;
+
+        //increment the value for the character at position i for a1
+        it2 = charCount.find(a2.at(i));
+        if (it2 != charCount.end())
+            charCount[a2.at(i)] -= 1; 
+        else
+            charCount[a2.at(i)] = -1;
+    }
+
+    for (charMap::iterator pair = charCount.begin(); pair != charCount.end(); ++pair)
+        if (pair->second != 0) return false; 
+
+    return true;
 }
 
 int AnagramDatabase::getWordSum(const std::string& word)
