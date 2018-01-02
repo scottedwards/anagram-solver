@@ -25,8 +25,6 @@ words of equal length:
  
  The reason you need these two hashmaps instead of the last one (internal), is because of the reason that a three letter word can have the same sum of values as a two letter word, but they aren't anagrams. This is why we split the internal hashmaps into groups of words that equal the same length.
  
-------------------------------------------------------------------------------------
-
 ## Update
 
 Turns out that two words that have the same length and the same character sum can be non-anagrams.
@@ -34,6 +32,6 @@ To resolve this issue, I run a permutation checker on the set returned to elimin
 
 The consequences of this are that the algorithm no longer runs in constant time. If you give the 
 program an anagram of length `l` and that set returned is of size `s`, the running time of this
-algorithm is now O(lxs). In the end however, this is a lot better than generating all possible
+algorithm is now O(l\*s). In the end however, this is a lot better than generating all possible
 word combinations, which is O(l!).
  
