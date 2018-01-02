@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
                     commandHandler(input);
                     break;
                 default:
-                    std::cout << "Finding Anagrams..." << std::endl;
+                    std::cout << YELLOW <<  "Finding Anagrams..." << NT << std::endl;
                     typedef std::set<std::string> str_set;
                     str_set anagrams = ad.findAnagrams(input);
                     if (anagrams.empty())
