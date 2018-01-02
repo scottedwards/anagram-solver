@@ -11,7 +11,7 @@
 #define RED "\033[1;31m"
 #define SEPBAR "--------------------------------------------------------------"
 
-void commandHandler(const std::string& cmd);
+void commandHandler(const std::string& wholeCmd);
 
 AnagramDatabase ad;
 
@@ -71,7 +71,7 @@ int main(int argc, char * argv[])
         }
         catch (std::exception& e)
         {
-            std::cout << e.what() << std::endl;
+            std::cout << RED << "Error: " << NT << e.what() << std::endl;
         }
 
     }
@@ -79,7 +79,37 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-void commandHandler(const std::string& cmd)
+void commandHandler(const std::string& wholeCmd)
 {
+    std::string cmd = "";
+    int index = 1;
+    //get the command name
+    while (index < wholeCmd.length() && wholeCmd.at(index) != ' ') 
+        cmd += wholeCmd.at(index++);
 
+    if (cmd == "quit")
+    {
+        std::cout << YELLOW << "Bye" << NT << std::endl;
+    }
+    else if (cmd == "help")
+    {
+        std::cout << GREEN << "dict <path_to_file>" << NT << std::endl
+            << " change the list of words the program uses to find anagrams"
+            << std::endl;
+    }
+    else if (cmd == "dict")
+    {
+        std::string file = "";
+        //move the index past the space
+        index += 1;
+        //get the next word after the command which will be file path
+        while (index < wholeCmd.length() && wholeCmd.at(index) != ' ') 
+            file += wholeCmd.at(index++);
+
+        ad.setDictionary(file);
+    }
+    else
+    {
+        std::cout << RED << "Command not recognised." << NT << std::endl;
+    }
 }
