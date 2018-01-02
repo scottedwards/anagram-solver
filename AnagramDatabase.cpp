@@ -78,15 +78,40 @@ void AnagramDatabase::setDictionary(const std::string& dict)
 std::set<std::string> AnagramDatabase::findAnagrams(const std::string& anagram)
 {
     std::set<std::string> anagrams;
-    anagram_db::const_iterator lenMapIt = adb.find(anagram.length());
-    if (lenMapIt != adb.end())
+    //check for a wild-card
+    size_t wildcard = anagram.find('?');
+    if (wildcard != std::string::npos)
     {
-        int sum = getWordSum(anagram);
-        char_sum_map::const_iterator sumMapIt = lenMapIt->second.find(sum);
-        if (sumMapIt != lenMapIt->second.end())
-            anagrams = adb[anagram.length()][sum];
+        //if there is a wild-card symbol, split the word in two
+        //and use find anagram on all possible combinations
+        std::string first = anagram.substr(0, wildcard);
+        std::string second = anagram.substr(wildcard + 1, anagram.length());
+        //[33, 126] is the range of all printable ASCII characters
+        for (int i = 97; i <= 122; i++)
+        {
+            char possibility = (char) i;
+            std::string possibleWord = first + possibility + second;
+            std::set<std::string> anagram_subset = findAnagrams(possibleWord); 
+            //insert all anagrams found in the subset into the main set
+            //insert makes sure it does not add duplicates.
+            anagrams.insert(anagram_subset.begin(), anagram_subset.end());
+        }
     }
-    filter(anagrams, anagram, &isAnagram);
+    else
+    {
+        //if there are no wildcards
+        anagram_db::const_iterator lenMapIt = adb.find(anagram.length());
+        if (lenMapIt != adb.end())
+        {
+            int sum = getWordSum(anagram);
+            char_sum_map::const_iterator sumMapIt = lenMapIt->second.find(sum);
+            if (sumMapIt != lenMapIt->second.end())
+                anagrams = adb[anagram.length()][sum];
+        }
+        //remove any words that are in the returned set that are not anagrams.
+        filter(anagrams, anagram, &isAnagram);
+    }
+
     return anagrams;
 }
 
