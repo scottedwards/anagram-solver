@@ -27,6 +27,8 @@ void AnagramDatabase::setDictionary(const std::string& dict)
     //open the file and make sure it's open
     std::ifstream infile(dict);
     if (infile.is_open()) {
+        //clear the database
+        adb.clear();
         std::string word;
         //read the file line by line
         while (infile >> word)
