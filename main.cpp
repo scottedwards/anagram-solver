@@ -96,6 +96,10 @@ void commandHandler(const std::string& wholeCmd)
         std::cout << GREEN << "dict <path_to_file>" << NT << std::endl
             << " change the list of words the program uses to find anagrams"
             << std::endl;
+        std::cout << GREEN << "?" << NT << std::endl
+            << " use ? when finding an anagram to indicate that it can" << std::endl
+            << " be any letter"
+            << std::endl;
     }
     else if (cmd == "dict")
     {
