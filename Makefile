@@ -33,4 +33,3 @@ endef
 clean :
 	rm -f $(BINARY) $(OBJS)
 	rm -rf $(BUILDDIR)
-
