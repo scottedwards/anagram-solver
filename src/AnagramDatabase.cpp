@@ -15,14 +15,12 @@ AnagramDatabase::AnagramDatabase()
 }
 
 AnagramDatabase::AnagramDatabase(const std::string& dict) 
-    throw (std::exception)
 {
     anagram_db adb; 
     setDictionary(dict); 
 }
 
 void AnagramDatabase::setDictionary(const std::string& dict) 
-    throw (std::exception)
 {
     //open the file and make sure it's open
     std::ifstream infile(dict);

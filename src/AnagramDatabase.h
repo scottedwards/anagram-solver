@@ -26,7 +26,7 @@ class AnagramDatabase
          * Constructor that takes a path to a word file.
          * Loads all words from the text file into the hashmaps.
          */
-        AnagramDatabase(const std::string& dict) throw (std::exception);
+        AnagramDatabase(const std::string& dict);
         /**
          * Copy constructor.
          * Copies over the hasmaps;
@@ -40,7 +40,7 @@ class AnagramDatabase
         /**
          * Uses the given word file for a dictionary.
          */
-        void setDictionary(const std::string& dict) throw (std::exception); 
+        void setDictionary(const std::string& dict); 
         /**
          * Returns if a word is an anagram of another word.
          * Does this by comparing the amount of times a character pops up in
