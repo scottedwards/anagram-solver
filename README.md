@@ -6,7 +6,7 @@ There will be two parts to this program, seting up a data structure to store all
 the linux dictionary file, then searching that data structure to find all posible anagrams of a
 given word.
 
-To compile this program, simply using `make` will use the Makefile provided to create the executable `anagram_solver`.
+To compile this program, simply using `make` will use the Makefile provided to create the executable `solve_anagram`.
 
 ## Linear Time
 With my other anagram problem solver, the time complexity was exponential (yikes!) - meaning that
